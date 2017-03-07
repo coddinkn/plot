@@ -1,6 +1,5 @@
 {
-module Lexer (lex, Token(..)) where
-import Prelude hiding (lex)
+module Lexer where
 }
 
 %wrapper "basic"
@@ -14,18 +13,35 @@ tokens :-
   \)      { \s -> TRParen }
   let     { \s -> TLet }
   \-\>    { \s -> TLambda }
-  $op     { \s -> TOp s }
+  $op     { \s -> TOp $ strToOp s }
   def     { \s -> TDef }
   rec     { \s -> TRec }
-  $digit+ { \s -> TInt (read s) }
+  $digit+ { \s -> TInt $ read s }
   $alpha+ { \s -> TId s }
   $white+ ;
 
 {
--- The token type
+data Op = Plus
+        | Minus
+        | Times
+        | Power
+        | Mod
+        | Cons
+        | Divide
+        deriving (Eq,Show)
+
+strToOp :: String -> Op
+strToOp s = case s of "+" -> Plus
+                      "-" -> Minus
+                      "*" -> Times
+                      "/" -> Divide
+                      "^" -> Power
+                      ":" -> Cons
+                      "%" -> Mod
+
 data Token = TId String
            | TInt Int
-           | TOp String
+           | TOp Op
            | TRParen
            | TLParen
            | TLambda
@@ -34,6 +50,8 @@ data Token = TId String
            | TRec
            deriving (Eq,Show)
 
-lex :: String -> [Token]
-lex = alexScanTokens
+type Tokens = [Token]
+
+tokenize :: String -> Tokens
+tokenize = alexScanTokens
 }

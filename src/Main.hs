@@ -1,9 +1,9 @@
-import Lexer
-import Parser
+import Lexer  (tokenize)
+import Parser (parse)
 
-front_end = Parser.parse . Lexer.lex
+front = parse . tokenize
 
 main :: IO()
 main = do
-    string <- getContents
-    print $ front_end string
+    input <- getContents
+    print $ front input

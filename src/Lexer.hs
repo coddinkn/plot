@@ -2,8 +2,7 @@
 {-# LANGUAGE CPP #-}
 {-# LINE 1 "src/Lexer.x" #-}
 
-module Lexer (lex, Token(..)) where
-import Prelude hiding (lex)
+module Lexer where
 
 #if __GLASGOW_HASKELL__ >= 603
 #include "ghcconfig.h"
@@ -443,12 +442,29 @@ alex_accept = listArray (0::Int,17) [AlexAccNone,AlexAcc 15,AlexAcc 14,AlexAcc 1
 
 alex_actions = array (0::Int,16) [(15,alex_action_0),(14,alex_action_1),(13,alex_action_2),(12,alex_action_3),(11,alex_action_4),(10,alex_action_4),(9,alex_action_5),(8,alex_action_6),(7,alex_action_7),(6,alex_action_8),(5,alex_action_8),(4,alex_action_8),(3,alex_action_8),(2,alex_action_8),(1,alex_action_8),(0,alex_action_8)]
 
-{-# LINE 24 "src/Lexer.x" #-}
+{-# LINE 23 "src/Lexer.x" #-}
 
--- The token type
+data Op = Plus
+        | Minus
+        | Times
+        | Power
+        | Mod
+        | Cons
+        | Divide
+        deriving (Eq,Show)
+
+strToOp :: String -> Op
+strToOp s = case s of "+" -> Plus
+                      "-" -> Minus
+                      "*" -> Times
+                      "/" -> Divide
+                      "^" -> Power
+                      ":" -> Cons
+                      "%" -> Mod
+
 data Token = TId String
            | TInt Int
-           | TOp String
+           | TOp Op
            | TRParen
            | TLParen
            | TLambda
@@ -457,17 +473,19 @@ data Token = TId String
            | TRec
            deriving (Eq,Show)
 
-lex :: String -> [Token]
-lex = alexScanTokens
+type Tokens = [Token]
+
+tokenize :: String -> Tokens
+tokenize = alexScanTokens
 
 alex_action_0 =  \s -> TLParen 
 alex_action_1 =  \s -> TRParen 
 alex_action_2 =  \s -> TLet 
 alex_action_3 =  \s -> TLambda 
-alex_action_4 =  \s -> TOp s 
+alex_action_4 =  \s -> TOp $ strToOp s 
 alex_action_5 =  \s -> TDef 
 alex_action_6 =  \s -> TRec 
-alex_action_7 =  \s -> TInt (read s) 
+alex_action_7 =  \s -> TInt $ read s 
 alex_action_8 =  \s -> TId s 
 {-# LINE 1 "templates/GenericTemplate.hs" #-}
 {-# LINE 1 "templates/GenericTemplate.hs" #-}
