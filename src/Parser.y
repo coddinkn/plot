@@ -20,17 +20,15 @@ import Lexer
 
 %%
 
-expr  : '(' expr op expr ')'    { EBinOp  $2 $3 $4 }
-      | '(' ids lambda expr ')' { ELambda $2 $4 }
+expr  : '(' ids lambda expr ')' { ELambda $2 $4 }
       | '(' id exprs ')'        { EApp    $2 $3 }
       | id                      { EId  $1 }
-      | int                     { EInt $1 }
 
 exprs : {- empty -}  { [] }
       | exprs expr   { $2 : $1 }
 
 ids   : {- empty -}  { [] }
-      | ids id       { $2 : $1 }
+      | id ids       { $1 : $2 }
 
 {
 parseError :: Tokens -> a
@@ -43,6 +41,6 @@ data Expr = ELambda [Id] Expr
           | EApp    Id [Expr]
           | EId     Id
           | EInt    Int
-          deriving (Show)
+          deriving (Eq,Show)
 }
 
