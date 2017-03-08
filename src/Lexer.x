@@ -12,7 +12,8 @@ tokens :-
   \(      { \s -> TLParen }
   \)      { \s -> TRParen }
   let     { \s -> TLet }
-  \-\>    { \s -> TLambda }
+  \-\>    { \s -> TArrow }
+  \\      { \s -> TLambda }
   $op     { \s -> TOp $ strToOp s }
   def     { \s -> TDef }
   rec     { \s -> TRec }
@@ -28,7 +29,7 @@ data Op = Plus
         | Mod
         | Cons
         | Divide
-        deriving (Eq,Show)
+        deriving (Eq, Show)
 
 strToOp :: String -> Op
 strToOp s = case s of "+" -> Plus
@@ -45,10 +46,12 @@ data Token = TId String
            | TRParen
            | TLParen
            | TLambda
+           | TArrow
+           | TApp
            | TLet
            | TDef 
            | TRec
-           deriving (Eq,Show)
+           deriving (Eq, Show)
 
 type Tokens = [Token]
 
