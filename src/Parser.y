@@ -21,7 +21,7 @@ expr  : '(' lam exprs '->' expr ')' { ELambda $3 $5 }
       | id                          { EId  $1 }
 
 exprs : {- empty -}  { [] }
-      | exprs expr   { $2 : $1 }
+      | expr exprs   { $1 : $2 }
 
 {
 parseError :: Tokens -> a
@@ -30,6 +30,7 @@ parseError _ = error "Parse error"
 data Expr = ELambda [Expr] Expr
           | EApp    Expr [Expr]
           | EId     String
+          | EInt    Int
           deriving (Eq, Show)
 }
 

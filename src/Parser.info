@@ -11,7 +11,7 @@ Grammar
 	expr -> '(' expr exprs ')'                         (2)
 	expr -> id                                         (3)
 	exprs ->                                           (4)
-	exprs -> exprs expr                                (5)
+	exprs -> expr exprs                                (5)
 
 -----------------------------------------------------------------------------
 Terminals
@@ -86,52 +86,48 @@ State 6
 
 	expr -> '(' expr . exprs ')'                        (rule 2)
 
-	id             reduce using rule 4
-	'('            reduce using rule 4
+	id             shift, and enter state 4
+	'('            shift, and enter state 5
 	')'            reduce using rule 4
 
-	exprs          goto state 9
+	expr           goto state 8
+	exprs          goto state 10
 
 State 7
 
 	expr -> '(' lam . exprs '->' expr ')'               (rule 1)
 
-	id             reduce using rule 4
+	id             shift, and enter state 4
 	'->'           reduce using rule 4
-	'('            reduce using rule 4
+	'('            shift, and enter state 5
 
-	exprs          goto state 8
+	expr           goto state 8
+	exprs          goto state 9
 
 State 8
 
-	expr -> '(' lam exprs . '->' expr ')'               (rule 1)
-	exprs -> exprs . expr                               (rule 5)
+	exprs -> expr . exprs                               (rule 5)
 
 	id             shift, and enter state 4
-	'->'           shift, and enter state 12
+	'->'           reduce using rule 4
 	'('            shift, and enter state 5
+	')'            reduce using rule 4
 
-	expr           goto state 10
+	expr           goto state 8
+	exprs          goto state 13
 
 State 9
 
-	expr -> '(' expr exprs . ')'                        (rule 2)
-	exprs -> exprs . expr                               (rule 5)
+	expr -> '(' lam exprs . '->' expr ')'               (rule 1)
 
-	id             shift, and enter state 4
-	'('            shift, and enter state 5
-	')'            shift, and enter state 11
+	'->'           shift, and enter state 12
 
-	expr           goto state 10
 
 State 10
 
-	exprs -> exprs expr .                               (rule 5)
+	expr -> '(' expr exprs . ')'                        (rule 2)
 
-	id             reduce using rule 5
-	'->'           reduce using rule 5
-	'('            reduce using rule 5
-	')'            reduce using rule 5
+	')'            shift, and enter state 11
 
 
 State 11
@@ -152,16 +148,24 @@ State 12
 	id             shift, and enter state 4
 	'('            shift, and enter state 5
 
-	expr           goto state 13
+	expr           goto state 14
 
 State 13
 
-	expr -> '(' lam exprs '->' expr . ')'               (rule 1)
+	exprs -> expr exprs .                               (rule 5)
 
-	')'            shift, and enter state 14
+	'->'           reduce using rule 5
+	')'            reduce using rule 5
 
 
 State 14
+
+	expr -> '(' lam exprs '->' expr . ')'               (rule 1)
+
+	')'            shift, and enter state 15
+
+
+State 15
 
 	expr -> '(' lam exprs '->' expr ')' .               (rule 1)
 
@@ -178,4 +182,4 @@ Grammar Totals
 Number of rules: 6
 Number of terminals: 5
 Number of non-terminals: 3
-Number of states: 15
+Number of states: 16
