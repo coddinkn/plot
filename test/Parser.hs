@@ -1,6 +1,7 @@
 {-# OPTIONS_GHC -w #-}
 module Parser where
 import Lexer
+import Expr
 import Control.Applicative(Applicative(..))
 import Control.Monad (ap)
 
@@ -34,37 +35,43 @@ action_5 (10) = happyShift action_7
 action_5 (4) = happyGoto action_6
 action_5 _ = happyFail
 
-action_6 (5) = happyGoto action_9
+action_6 (6) = happyShift action_4
+action_6 (8) = happyShift action_5
+action_6 (4) = happyGoto action_8
+action_6 (5) = happyGoto action_10
 action_6 _ = happyReduce_4
 
-action_7 (5) = happyGoto action_8
+action_7 (6) = happyShift action_4
+action_7 (8) = happyShift action_5
+action_7 (4) = happyGoto action_8
+action_7 (5) = happyGoto action_9
 action_7 _ = happyReduce_4
 
 action_8 (6) = happyShift action_4
-action_8 (7) = happyShift action_12
 action_8 (8) = happyShift action_5
-action_8 (4) = happyGoto action_10
-action_8 _ = happyFail
+action_8 (4) = happyGoto action_8
+action_8 (5) = happyGoto action_13
+action_8 _ = happyReduce_4
 
-action_9 (6) = happyShift action_4
-action_9 (8) = happyShift action_5
-action_9 (9) = happyShift action_11
-action_9 (4) = happyGoto action_10
+action_9 (7) = happyShift action_12
 action_9 _ = happyFail
 
-action_10 _ = happyReduce_5
+action_10 (9) = happyShift action_11
+action_10 _ = happyFail
 
 action_11 _ = happyReduce_2
 
 action_12 (6) = happyShift action_4
 action_12 (8) = happyShift action_5
-action_12 (4) = happyGoto action_13
+action_12 (4) = happyGoto action_14
 action_12 _ = happyFail
 
-action_13 (9) = happyShift action_14
-action_13 _ = happyFail
+action_13 _ = happyReduce_5
 
-action_14 _ = happyReduce_1
+action_14 (9) = happyShift action_15
+action_14 _ = happyFail
+
+action_15 _ = happyReduce_1
 
 happyReduce_1 = happyReduce 6 4 happyReduction_1
 happyReduction_1 (_ `HappyStk`
@@ -101,10 +108,10 @@ happyReduction_4  =  HappyAbsSyn5
 	)
 
 happyReduce_5 = happySpecReduce_2  5 happyReduction_5
-happyReduction_5 (HappyAbsSyn4  happy_var_2)
-	(HappyAbsSyn5  happy_var_1)
+happyReduction_5 (HappyAbsSyn5  happy_var_2)
+	(HappyAbsSyn4  happy_var_1)
 	 =  HappyAbsSyn5
-		 (happy_var_2 : happy_var_1
+		 (happy_var_1 : happy_var_2
 	)
 happyReduction_5 _ _  = notHappyAtAll 
 
@@ -157,11 +164,6 @@ happySeq = happyDontSeq
 
 parseError :: Tokens -> a
 parseError _ = error "Parse error"
-
-data Expr = ELambda [Expr] Expr
-          | EApp    Expr [Expr]
-          | EId     String
-          deriving (Eq, Show)
 {-# LINE 1 "templates/GenericTemplate.hs" #-}
 {-# LINE 1 "templates/GenericTemplate.hs" #-}
 {-# LINE 1 "<built-in>" #-}

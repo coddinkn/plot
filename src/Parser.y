@@ -1,6 +1,7 @@
 {
 module Parser where
 import Lexer
+import Expr
 }
 
 %name parse
@@ -26,11 +27,5 @@ exprs : {- empty -}  { [] }
 {
 parseError :: Tokens -> a
 parseError _ = error "Parse error"
-
-data Expr = ELambda [Expr] Expr
-          | EApp    Expr [Expr]
-          | EId     String
-          | EInt    Int
-          deriving (Eq, Show)
 }
 

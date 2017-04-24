@@ -1,2 +1,3 @@
-# plot
-A compiler for a scheme like language implemented in Haskell targeting x86_64
+# ramble
+A compiler for a (currently) lisp like language. 
+Implemented in Haskell targeting x86_64.

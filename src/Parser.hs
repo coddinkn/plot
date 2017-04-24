@@ -1,6 +1,7 @@
 {-# OPTIONS_GHC -w #-}
 module Parser where
 import Lexer
+import Expr
 import Control.Applicative(Applicative(..))
 import Control.Monad (ap)
 
@@ -163,12 +164,6 @@ happySeq = happyDontSeq
 
 parseError :: Tokens -> a
 parseError _ = error "Parse error"
-
-data Expr = ELambda [Expr] Expr
-          | EApp    Expr [Expr]
-          | EId     String
-          | EInt    Int
-          deriving (Eq, Show)
 {-# LINE 1 "templates/GenericTemplate.hs" #-}
 {-# LINE 1 "templates/GenericTemplate.hs" #-}
 {-# LINE 1 "<built-in>" #-}

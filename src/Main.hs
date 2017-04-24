@@ -1,5 +1,6 @@
 import Lexer
 import Parser
+import Expr
 
 autoCurry :: Expr -> Expr
 autoCurry expr = 
