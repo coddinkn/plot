@@ -9,11 +9,12 @@ $alpha = [a-zA-Z]         -- alphabetic characters
 $op    = [\-\+\*\:\/\^\%] -- operators
 
 tokens :-
-  \(      { \s -> TLParen }
-  \)      { \s -> TRParen }
+  \(      { \s -> TLP }
+  \)      { \s -> TRP }
+  \{      { \s -> TLB }
+  \}      { \s -> TRB }
   let     { \s -> TLet }
-  \-\>    { \s -> TArrow }
-  \\      { \s -> TLambda }
+  \-\>    { \s -> TArr }
   $op     { \s -> TOp $ strToOp s }
   def     { \s -> TDef }
   rec     { \s -> TRec }
@@ -43,10 +44,11 @@ strToOp s = case s of "+" -> Plus
 data Token = TId String
            | TInt Int
            | TOp Op
-           | TRParen
-           | TLParen
-           | TLambda
-           | TArrow
+           | TRP
+           | TLP
+           | TLB
+           | TRB
+           | TArr
            | TApp
            | TLet
            | TDef 

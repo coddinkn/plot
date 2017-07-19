@@ -10,16 +10,19 @@ import Expr
 
 %token 
       id   { TId  $$ }
-      '->' { TArrow  }
-      '('  { TLParen }
-      ')'  { TRParen }
-      lam  { TLambda }
+      int  { TInt $$ }
+      '->' { TArr }
+      '('  { TLP }
+      ')'  { TRP }
+      '{'  { TLB }
+      '}'  { TRB }
 
 %%
 
-expr  : '(' lam exprs '->' expr ')' { ELambda $3 $5 }
-      | '(' expr exprs ')'          { EApp $2 $3 }
-      | id                          { EId  $1 }
+expr  : '{' exprs '->' expr '}' { ELam $2 $4 () }
+      | '(' exprs ')'           { EApp $2 () }
+      | id                      { EId  $1 () }
+      | int                     { EInt $1 () }
 
 exprs : {- empty -}  { [] }
       | expr exprs   { $1 : $2 }
